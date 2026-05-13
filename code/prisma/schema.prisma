@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id        String     @id @default(cuid())
+  title     String
+  venue     String
+  date      DateTime
+  capacity  Int
+  createdAt DateTime   @default(now())
+  attendees Attendee[]
+
+  @@index([date])
+}
+
+model Attendee {
+  id                String    @id @default(cuid())
+  eventId           String
+  event             Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name              String
+  phone             String
+  dietaryPreference String    @default("")
+  hasPlusOne        Boolean   @default(false)
+  rsvpStatus        String    @default("confirmed")
+  checkedInAt       DateTime?
+
+  @@index([eventId])
+  @@index([name])
+  @@index([phone])
+}

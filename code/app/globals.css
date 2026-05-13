@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafaf9;
+  --foreground: #0c0a09;
+  --brand: #0d9488;
+  --brand-muted: #ccfbf1;
+  --surface: #ffffff;
+  --muted: #78716c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0c0a09;
+    --foreground: #fafaf9;
+    --brand: #2dd4bf;
+    --brand-muted: #134e4a;
+    --surface: #1c1917;
+    --muted: #a8a29e;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Hero mesh (marketing) */
+.hero-mesh {
+  background-color: #0c0a09;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -30%, rgba(45, 212, 191, 0.35), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgba(99, 102, 241, 0.2), transparent),
+    radial-gradient(ellipse 50% 40% at 0% 20%, rgba(20, 184, 166, 0.15), transparent);
+}
+
+@media (prefers-color-scheme: light) {
+  .hero-mesh {
+    background-color: #fafaf9;
+    background-image:
+      radial-gradient(ellipse 90% 70% at 50% -40%, rgba(13, 148, 136, 0.2), transparent),
+      radial-gradient(ellipse 70% 50% at 100% 0%, rgba(99, 102, 241, 0.12), transparent),
+      radial-gradient(ellipse 60% 45% at 0% 30%, rgba(13, 148, 136, 0.1), transparent);
+  }
+}
