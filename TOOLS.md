@@ -21,7 +21,7 @@ This is what the project is built with, and why those choices made sense for a s
 - **WebSockets** — Nice for live dashboards; **refreshing after each check-in** matched the brief with less moving parts.
 - **Separate React SPA + Express API** — Totally valid; we wanted **one deployable app** and less glue for this scope, so **Next.js** carried both jobs.
 
-## AI help (being upfront)
+## AI help
 
 LLMs helped with early **scaffolding** (project layout), **rough schema ideas**, and **UI structure**. Anything that touches **security**, **RSVP rules**, **idempotent check-in**, and **product tradeoffs** was reviewed and tightened by hand so the result reflects intentional choices, not copy-paste defaults.
 
@@ -38,14 +38,3 @@ The main app talks to the server through **server actions**. If you want to scri
 - `POST /api/events/:id/attendees` — add a guest (JSON body)  
 - `PATCH /api/events/:id/attendees/:attendeeId` — `{ "action": "checkIn" }` or `"undoCheckIn"`  
 - `GET /api/events/:id/export` — CSV of checked-in guests  
-
-## If `npm run dev` says the port is in use
-
-Something else (often an old dev server) is already on **3000**. On Windows you can find and stop it:
-
-```powershell
-netstat -ano | findstr ":3000"
-taskkill /F /PID <PID_FROM_LIST>
-```
-
-Or start on another port: `npx next dev -p 3001`, then open `http://localhost:3001`.

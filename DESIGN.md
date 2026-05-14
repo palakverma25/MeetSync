@@ -58,7 +58,6 @@ We had about a **weekend-sized** window. The biggest win was **reliable check-in
 ## Ideas for later
 
 - QR or short **guest codes** for self check-in.
-- **Offline-first** or a PWA when the venue Wi-Fi is weak.
 - **SMS / email** nudges and thank-yous after the event.
 - **Deduplicate people** across events for “regulars” and simple analytics.
 - **PostgreSQL** and real **authentication** when we outgrow the pilot setup.
