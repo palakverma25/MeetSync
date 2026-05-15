@@ -50,7 +50,7 @@ We had about a **weekend-sized** window. The biggest win was **reliable check-in
 | **Live counts** | Refresh from the server after each action — **no WebSockets**. Fine for one or two people at the door. |
 | **Guest RSVP** | **Email:** token link → guest form → updates roster. |
 | **+1** | One **yes/no flag** on the guest row (not a separate person row). Enough for catering notes for v1. |
-| **Two devices editing** | **SQLite** with **last-write-wins** on the same row is acceptable for v1. A hosted DB (and maybe versioning) would come with production hardening. |
+| **Two devices editing** | **PostgreSQL** with **last-write-wins** on the same row is acceptable for v1. Stronger concurrency or versioning would come with production hardening. |
 
 ## How we’d know it worked
 

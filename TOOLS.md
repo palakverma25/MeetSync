@@ -10,8 +10,8 @@ This is what the project is built with, and why those choices made sense for a s
 | Language | **TypeScript (strict)** | Catches mistakes early when we pass around guest data and API payloads. |
 | Styling | **Tailwind CSS v4** | Lets us lay out a **mobile-first** door flow quickly without writing a lot of custom CSS. |
 | App shell | **Next.js 15** | One codebase for pages, small REST endpoints, server actions for saves, and a straightforward path to hosting later. |
-| Data layer | **Prisma** | We describe `Event` and `Attendee` in a schema, get typed queries, and use `db push` while iterating. |
-| Database | **SQLite** | No extra server to run for a weekend build; a file database is enough for an internal pilot. We can swap to **PostgreSQL** later without throwing away the Prisma work. |
+| Data layer | **Prisma** | We describe `Event` and `Attendee` in a schema, get typed queries, and use **migrations** (`migrate dev` / `migrate deploy`) for schema changes. |
+| Database | **PostgreSQL** | Required for **Vercel** and similar hosts (no durable SQLite on serverless). Local dev uses the same stack (e.g. Neon, Docker, or Supabase). |
 | Runtime | **Node.js 20** | What Next.js expects; keeps local and deploy environments aligned. |
 
 ## Things we did *not* reach for (and why)
