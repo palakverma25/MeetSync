@@ -80,9 +80,12 @@ export default async function EventDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-x-10 gap-y-4 rounded-2xl bg-white px-6 py-5 shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50 sm:gap-x-14 sm:px-8">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {statCards.map((s) => (
-              <div key={s.label} className="min-w-22">
+              <div
+                key={s.label}
+                className="rounded-2xl bg-white px-4 py-4 shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50 sm:px-5"
+              >
                 <div className="text-xs font-medium text-stone-500 dark:text-stone-400">{s.label}</div>
                 <div className="mt-1 text-2xl font-bold tabular-nums tracking-tight text-stone-900 dark:text-white">
                   {s.value}
@@ -92,8 +95,8 @@ export default async function EventDetailPage({ params }: PageProps) {
           </div>
         </header>
 
-        <div className="grid gap-10 lg:grid-cols-[1fr_min(20rem,100%)] lg:items-start lg:gap-12">
-          <div className="space-y-12">
+        <div className="flex flex-col gap-8 xl:grid xl:grid-cols-[minmax(0,1fr)_17.5rem] xl:items-start xl:gap-8">
+          <div className="min-w-0 space-y-8">
             <EventRoster eventId={event.id} rows={rosterRows} appBaseUrl={appBaseUrl} />
 
             <section className="space-y-4">
@@ -122,9 +125,9 @@ export default async function EventDetailPage({ params }: PageProps) {
             </section>
           </div>
 
-          <div className="lg:pt-0">
+          <aside className="xl:sticky xl:top-8 xl:self-start">
             <AddAttendeeForm eventId={event.id} />
-          </div>
+          </aside>
         </div>
       </div>
     </div>

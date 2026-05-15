@@ -6,7 +6,7 @@ import { addAttendee, type FormState } from "@/app/actions";
 const initial: FormState = { ok: true, error: null, info: null };
 
 const field =
-  "mt-2 w-full rounded-2xl bg-stone-50 px-4 py-2.5 text-sm text-stone-900 shadow-sm ring-1 ring-stone-200/70 outline-none transition placeholder:text-stone-400 focus:bg-white focus:ring-2 focus:ring-teal-500/25 dark:bg-stone-800/50 dark:text-white dark:ring-stone-600/60 dark:focus:bg-stone-900";
+  "mt-1.5 w-full rounded-xl bg-stone-50 px-3 py-2 text-sm text-stone-900 shadow-sm ring-1 ring-stone-200/70 outline-none transition placeholder:text-stone-400 focus:bg-white focus:ring-2 focus:ring-teal-500/25 dark:bg-stone-800/50 dark:text-white dark:ring-stone-600/60 dark:focus:bg-stone-900";
 
 export function AddAttendeeForm({ eventId }: { eventId: string }) {
   const [state, formAction] = useActionState(addAttendee, initial);
@@ -14,16 +14,16 @@ export function AddAttendeeForm({ eventId }: { eventId: string }) {
   return (
     <form
       action={formAction}
-      className="sticky top-8 space-y-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50 sm:p-7"
+      className="flex max-h-[min(32rem,calc(100vh-6rem))] flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50"
     >
       <input type="hidden" name="eventId" value={eventId} />
-      <div className="space-y-1">
-        <h2 className="text-lg font-semibold text-stone-900 dark:text-white">Add guest</h2>
-        <p className="text-sm leading-relaxed text-stone-500 dark:text-stone-400">
-          Walk-ins and last-minute RSVPs show up in the roster and check-in right away.
+      <div className="shrink-0 space-y-1 border-b border-stone-100 px-4 py-4 dark:border-stone-800 sm:px-5">
+        <h2 className="text-base font-semibold text-stone-900 dark:text-white">Add guest</h2>
+        <p className="text-xs leading-relaxed text-stone-500 dark:text-stone-400">
+          Walk-ins and last-minute RSVPs sync to roster and check-in.
         </p>
       </div>
-      <div className="space-y-5">
+      <div className="min-h-0 flex-1 space-y-3.5 overflow-y-auto px-4 py-4 sm:px-5">
         <label className="block text-sm font-medium text-stone-700 dark:text-stone-300">
           Name
           <input name="name" required className={field} />
@@ -75,22 +75,24 @@ export function AddAttendeeForm({ eventId }: { eventId: string }) {
           </p>
         </label>
       </div>
-      {state.error ? (
-        <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-800 dark:bg-red-950/35 dark:text-red-200" role="alert">
-          {state.error}
-        </p>
-      ) : null}
-      {state.info ? (
-        <p className="rounded-2xl bg-teal-50 px-4 py-3 text-sm text-teal-900 dark:bg-teal-950/35 dark:text-teal-100">
-          {state.info}
-        </p>
-      ) : null}
-      <button
-        type="submit"
-        className="w-full rounded-full bg-stone-900 py-3 text-sm font-semibold text-white transition hover:bg-stone-800 dark:bg-white dark:text-stone-900 dark:hover:bg-stone-100"
-      >
-        Add to roster
-      </button>
+      <div className="shrink-0 space-y-3 border-t border-stone-100 px-4 py-4 dark:border-stone-800 sm:px-5">
+        {state.error ? (
+          <p className="rounded-xl bg-red-50 px-3 py-2 text-xs text-red-800 dark:bg-red-950/35 dark:text-red-200" role="alert">
+            {state.error}
+          </p>
+        ) : null}
+        {state.info ? (
+          <p className="rounded-xl bg-teal-50 px-3 py-2 text-xs text-teal-900 dark:bg-teal-950/35 dark:text-teal-100">
+            {state.info}
+          </p>
+        ) : null}
+        <button
+          type="submit"
+          className="w-full rounded-full bg-stone-900 py-2.5 text-sm font-semibold text-white transition hover:bg-stone-800 dark:bg-white dark:text-stone-900 dark:hover:bg-stone-100"
+        >
+          Add to roster
+        </button>
+      </div>
     </form>
   );
 }

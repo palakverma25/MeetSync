@@ -18,7 +18,7 @@ export type RosterRow = {
 };
 
 const selectClass =
-  "min-w-[8.5rem] cursor-pointer rounded-xl bg-stone-50 py-2 pl-3 pr-8 text-xs font-semibold text-stone-800 shadow-sm ring-1 ring-stone-200/80 outline-none transition hover:bg-stone-100 focus:ring-2 focus:ring-teal-500/30 dark:bg-stone-800 dark:text-stone-100 dark:ring-stone-600/80 dark:hover:bg-stone-700";
+  "w-full min-w-[7.25rem] cursor-pointer rounded-lg bg-stone-50 py-1.5 pl-2.5 pr-7 text-xs font-semibold text-stone-800 shadow-sm ring-1 ring-stone-200/80 outline-none transition hover:bg-stone-100 focus:ring-2 focus:ring-teal-500/30 dark:bg-stone-800 dark:text-stone-100 dark:ring-stone-600/80 dark:hover:bg-stone-700";
 
 export function EventRoster({
   eventId,
@@ -61,109 +61,125 @@ export function EventRoster({
   }
 
   return (
-    <section className="space-y-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 className="text-base font-semibold text-stone-900 dark:text-white">Roster</h2>
-          <p className="mt-1 max-w-lg text-sm text-stone-500 dark:text-stone-400">
-            Guests with an email can receive a self-serve RSVP link; everyone has a unique link you
-            can copy. Changing RSVP here or from the guest link updates the same roster.
-          </p>
+    <section className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50">
+      <div className="border-b border-stone-100 px-4 py-4 dark:border-stone-800 sm:px-5">
+        <div className="flex flex-col gap-4">
+          <div>
+            <h2 className="text-base font-semibold text-stone-900 dark:text-white">Roster</h2>
+            <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+              Email guests an RSVP link or copy their personal link. Changes sync with the guest
+              RSVP page.
+            </p>
+          </div>
+          <label className="block">
+            <span className="sr-only">Filter roster</span>
+            <input
+              type="search"
+              placeholder="Search name, phone, or email…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              className="w-full rounded-xl bg-stone-50 px-3.5 py-2.5 text-sm text-stone-900 ring-1 ring-stone-200/70 outline-none transition placeholder:text-stone-400 focus:bg-white focus:ring-2 focus:ring-teal-500/25 dark:bg-stone-800/50 dark:text-white dark:ring-stone-600/60 dark:focus:bg-stone-900"
+            />
+          </label>
         </div>
-        <input
-          type="search"
-          placeholder="Filter by name or phone…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="w-full rounded-2xl bg-white px-4 py-2.5 text-sm text-stone-900 shadow-sm ring-1 ring-stone-200/70 outline-none transition placeholder:text-stone-400 focus:ring-2 focus:ring-teal-500/25 dark:bg-stone-900 dark:text-white dark:ring-stone-700 sm:max-w-xs sm:ml-auto"
-        />
       </div>
 
       {error ? (
         <p
-          className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-800 dark:bg-red-950/35 dark:text-red-200"
+          className="mx-4 mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800 dark:bg-red-950/35 dark:text-red-200 sm:mx-5"
           role="alert"
         >
           {error}
         </p>
       ) : null}
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50">
-        <div className="max-h-[min(520px,60vh)] overflow-auto overscroll-contain">
-          <table className="w-full min-w-[860px] text-left text-sm">
-            <thead className="sticky top-0 z-10 bg-stone-50/95 backdrop-blur-sm dark:bg-stone-900/95">
-              <tr className="text-xs font-medium text-stone-500 dark:text-stone-400">
-                <th className="px-6 py-3.5 font-medium">Name</th>
-                <th className="px-6 py-3.5 font-medium">Phone</th>
-                <th className="px-6 py-3.5 font-medium">Email</th>
-                <th className="px-6 py-3.5 font-medium">RSVP</th>
-                <th className="px-6 py-3.5 font-medium">+1</th>
-                <th className="px-6 py-3.5 font-medium">Dietary</th>
-                <th className="px-6 py-3.5 font-medium">In</th>
-                <th className="px-6 py-3.5 font-medium">Invite</th>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[52rem] text-left text-sm">
+          <thead className="bg-stone-50/90 text-xs font-medium text-stone-500 dark:bg-stone-800/50 dark:text-stone-400">
+            <tr>
+              <th className="px-4 py-3 font-medium sm:px-5">Guest</th>
+              <th className="hidden px-4 py-3 font-medium md:table-cell sm:px-5">Email</th>
+              <th className="px-4 py-3 font-medium sm:px-5">RSVP</th>
+              <th className="hidden px-4 py-3 font-medium lg:table-cell sm:px-5">+1</th>
+              <th className="hidden px-4 py-3 font-medium xl:table-cell sm:px-5">Dietary</th>
+              <th className="px-4 py-3 font-medium sm:px-5">In</th>
+              <th className="px-4 py-3 font-medium sm:px-5">Invite</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-5 py-12 text-center text-sm text-stone-500">
+                  No guests match your search.
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-100/90 dark:divide-stone-800/80">
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="px-6 py-14 text-center text-sm text-stone-500">
-                    No rows match your filter.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((a) => {
-                  const busy = isPending && pendingId === a.id;
-                  return (
-                    <tr
-                      key={a.id}
-                      className="transition-colors hover:bg-stone-50/80 dark:hover:bg-stone-800/40"
-                    >
-                      <td className="px-6 py-3.5 font-medium text-stone-900 dark:text-white">{a.name}</td>
-                      <td className="px-6 py-3.5 text-stone-600 dark:text-stone-300">{a.phone}</td>
-                      <td className="max-w-[9rem] truncate px-6 py-3.5 text-stone-600 dark:text-stone-300">
-                        {a.email ?? "—"}
-                      </td>
-                      <td className="px-6 py-3">
-                        <select
-                          aria-label={`RSVP for ${a.name}`}
-                          className={selectClass}
-                          value={a.rsvpStatus}
-                          disabled={busy}
-                          onChange={(e) => onRsvpChange(a.id, e.target.value)}
-                        >
-                          <option value="confirmed">Confirmed</option>
-                          <option value="pending">Pending</option>
-                          <option value="declined">Declined</option>
-                        </select>
-                      </td>
-                      <td className="px-6 py-3.5 text-stone-600 dark:text-stone-400">
-                        {a.hasPlusOne ? "Yes" : "—"}
-                      </td>
-                      <td className="max-w-40 truncate px-6 py-3.5 text-stone-500">
-                        {a.dietaryPreference || "—"}
-                      </td>
-                      <td className="px-6 py-3.5">
-                        {a.checkedInAt ? (
-                          <span className="font-medium text-teal-600 dark:text-teal-400">Yes</span>
-                        ) : (
-                          <span className="text-stone-400">No</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-3.5">
-                        <RsvpInviteActions
-                          attendeeId={a.id}
-                          email={a.email}
-                          rsvpToken={a.rsvpToken}
-                          appBaseUrl={appBaseUrl}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+            ) : (
+              filtered.map((a) => {
+                const busy = isPending && pendingId === a.id;
+                return (
+                  <tr
+                    key={a.id}
+                    className="align-top transition-colors hover:bg-stone-50/80 dark:hover:bg-stone-800/30"
+                  >
+                    <td className="px-4 py-3 sm:px-5">
+                      <div className="font-medium text-stone-900 dark:text-white">{a.name}</div>
+                      <div className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">{a.phone}</div>
+                      {a.email ? (
+                        <div className="mt-1 truncate text-xs text-stone-500 md:hidden dark:text-stone-400">
+                          {a.email}
+                        </div>
+                      ) : null}
+                    </td>
+                    <td className="hidden max-w-[12rem] truncate px-4 py-3 text-stone-600 md:table-cell dark:text-stone-300 sm:px-5">
+                      {a.email ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 sm:px-5">
+                      <select
+                        aria-label={`RSVP for ${a.name}`}
+                        className={selectClass}
+                        value={a.rsvpStatus}
+                        disabled={busy}
+                        onChange={(e) => onRsvpChange(a.id, e.target.value)}
+                      >
+                        <option value="confirmed">Confirmed</option>
+                        <option value="pending">Pending</option>
+                        <option value="declined">Declined</option>
+                      </select>
+                    </td>
+                    <td className="hidden px-4 py-3 text-stone-600 lg:table-cell dark:text-stone-400 sm:px-5">
+                      {a.hasPlusOne ? "Yes" : "—"}
+                    </td>
+                    <td className="hidden max-w-[10rem] truncate px-4 py-3 text-stone-500 xl:table-cell sm:px-5">
+                      {a.dietaryPreference || "—"}
+                    </td>
+                    <td className="px-4 py-3 sm:px-5">
+                      {a.checkedInAt ? (
+                        <span className="inline-flex rounded-full bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-700 dark:bg-teal-950/40 dark:text-teal-300">
+                          In
+                        </span>
+                      ) : (
+                        <span className="text-xs text-stone-400">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 sm:px-5">
+                      <RsvpInviteActions
+                        attendeeId={a.id}
+                        email={a.email}
+                        rsvpToken={a.rsvpToken}
+                        appBaseUrl={appBaseUrl}
+                      />
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="border-t border-stone-100 px-4 py-2.5 text-xs text-stone-500 dark:border-stone-800 dark:text-stone-400 sm:px-5">
+        {filtered.length} of {rows.length} guest{rows.length === 1 ? "" : "s"}
+        {q.trim() ? " shown" : " on roster"}
       </div>
     </section>
   );
