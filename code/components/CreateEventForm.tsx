@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { createEvent, type FormState } from "@/app/actions";
 
-const initial: FormState = { ok: true, error: null };
+const initial: FormState = { ok: true, error: null, info: null };
 
 const field =
   "mt-2 block w-full rounded-2xl bg-stone-50 px-4 py-3 text-base text-stone-900 shadow-sm ring-1 ring-stone-200/70 outline-none transition placeholder:text-stone-400 focus:bg-white focus:ring-2 focus:ring-teal-500/30 dark:bg-stone-800/40 dark:text-white dark:ring-stone-600/50 dark:focus:bg-stone-900";

@@ -3,11 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { updateAttendeeRsvp } from "@/app/actions";
+import { RsvpInviteActions } from "@/components/RsvpInviteActions";
 
 export type RosterRow = {
   id: string;
   name: string;
   phone: string;
+  email: string | null;
+  rsvpToken: string;
   rsvpStatus: string;
   hasPlusOne: boolean;
   dietaryPreference: string;
@@ -17,7 +20,15 @@ export type RosterRow = {
 const selectClass =
   "min-w-[8.5rem] cursor-pointer rounded-xl bg-stone-50 py-2 pl-3 pr-8 text-xs font-semibold text-stone-800 shadow-sm ring-1 ring-stone-200/80 outline-none transition hover:bg-stone-100 focus:ring-2 focus:ring-teal-500/30 dark:bg-stone-800 dark:text-stone-100 dark:ring-stone-600/80 dark:hover:bg-stone-700";
 
-export function EventRoster({ eventId, rows }: { eventId: string; rows: RosterRow[] }) {
+export function EventRoster({
+  eventId,
+  rows,
+  appBaseUrl,
+}: {
+  eventId: string;
+  rows: RosterRow[];
+  appBaseUrl: string;
+}) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -30,7 +41,8 @@ export function EventRoster({ eventId, rows }: { eventId: string; rows: RosterRo
     return rows.filter(
       (r) =>
         r.name.toLowerCase().includes(s) ||
-        r.phone.replace(/\s/g, "").includes(s.replace(/\s/g, "")),
+        r.phone.replace(/\s/g, "").includes(s.replace(/\s/g, "")) ||
+        (r.email?.toLowerCase().includes(s) ?? false),
     );
   }, [rows, q]);
 
@@ -53,9 +65,9 @@ export function EventRoster({ eventId, rows }: { eventId: string; rows: RosterRo
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-base font-semibold text-stone-900 dark:text-white">Roster</h2>
-          <p className="mt-1 max-w-md text-sm text-stone-500 dark:text-stone-400">
-            Update RSVP from each row — moving off <strong className="font-medium">Confirmed</strong> clears
-            check-in.
+          <p className="mt-1 max-w-lg text-sm text-stone-500 dark:text-stone-400">
+            Guests with an email can receive a self-serve RSVP link; everyone has a unique link you
+            can copy. Changing RSVP here or from the guest link updates the same roster.
           </p>
         </div>
         <input
@@ -78,21 +90,23 @@ export function EventRoster({ eventId, rows }: { eventId: string; rows: RosterRo
 
       <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50">
         <div className="max-h-[min(520px,60vh)] overflow-auto overscroll-contain">
-          <table className="w-full min-w-[680px] text-left text-sm">
+          <table className="w-full min-w-[860px] text-left text-sm">
             <thead className="sticky top-0 z-10 bg-stone-50/95 backdrop-blur-sm dark:bg-stone-900/95">
               <tr className="text-xs font-medium text-stone-500 dark:text-stone-400">
                 <th className="px-6 py-3.5 font-medium">Name</th>
                 <th className="px-6 py-3.5 font-medium">Phone</th>
+                <th className="px-6 py-3.5 font-medium">Email</th>
                 <th className="px-6 py-3.5 font-medium">RSVP</th>
                 <th className="px-6 py-3.5 font-medium">+1</th>
                 <th className="px-6 py-3.5 font-medium">Dietary</th>
                 <th className="px-6 py-3.5 font-medium">In</th>
+                <th className="px-6 py-3.5 font-medium">Invite</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100/90 dark:divide-stone-800/80">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-14 text-center text-sm text-stone-500">
+                  <td colSpan={8} className="px-6 py-14 text-center text-sm text-stone-500">
                     No rows match your filter.
                   </td>
                 </tr>
@@ -106,6 +120,9 @@ export function EventRoster({ eventId, rows }: { eventId: string; rows: RosterRo
                     >
                       <td className="px-6 py-3.5 font-medium text-stone-900 dark:text-white">{a.name}</td>
                       <td className="px-6 py-3.5 text-stone-600 dark:text-stone-300">{a.phone}</td>
+                      <td className="max-w-[9rem] truncate px-6 py-3.5 text-stone-600 dark:text-stone-300">
+                        {a.email ?? "—"}
+                      </td>
                       <td className="px-6 py-3">
                         <select
                           aria-label={`RSVP for ${a.name}`}
@@ -131,6 +148,14 @@ export function EventRoster({ eventId, rows }: { eventId: string; rows: RosterRo
                         ) : (
                           <span className="text-stone-400">No</span>
                         )}
+                      </td>
+                      <td className="px-6 py-3.5">
+                        <RsvpInviteActions
+                          attendeeId={a.id}
+                          email={a.email}
+                          rsvpToken={a.rsvpToken}
+                          appBaseUrl={appBaseUrl}
+                        />
                       </td>
                     </tr>
                   );

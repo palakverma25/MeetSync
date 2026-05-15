@@ -28,6 +28,7 @@ async function main() {
         create: firstNames.slice(0, 18).map((name, i) => ({
           name,
           phone: phone(i),
+          email: i < 2 ? `demo-rsvp-${i}@example.com` : null,
           dietaryPreference: i % 5 === 0 ? "Vegetarian" : i % 7 === 0 ? "No nuts" : "",
           hasPlusOne: i % 4 === 0,
           rsvpStatus: i === 3 ? "declined" : i === 5 ? "pending" : "confirmed",

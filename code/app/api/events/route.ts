@@ -67,7 +67,12 @@ export async function POST(req: Request) {
   }
 
   const event = await prisma.event.create({
-    data: { title, venue, date, capacity: Math.floor(capacity) },
+    data: {
+      title,
+      venue,
+      date,
+      capacity: Math.floor(capacity),
+    },
   });
 
   return NextResponse.json(

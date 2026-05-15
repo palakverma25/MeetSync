@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { AddAttendeeForm } from "@/components/AddAttendeeForm";
 import { EventRoster } from "@/components/EventRoster";
 import { formatEventDateTime } from "@/lib/formatDate";
+import { getPublicBaseUrl } from "@/lib/publicUrl";
 import { prisma } from "@/lib/prisma";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -25,11 +26,15 @@ export default async function EventDetailPage({ params }: PageProps) {
     id: a.id,
     name: a.name,
     phone: a.phone,
+    email: a.email,
+    rsvpToken: a.rsvpToken,
     rsvpStatus: a.rsvpStatus,
     hasPlusOne: a.hasPlusOne,
     dietaryPreference: a.dietaryPreference,
     checkedInAt: a.checkedInAt?.toISOString() ?? null,
   }));
+
+  const appBaseUrl = getPublicBaseUrl();
 
   const statCards = [
     { label: "Capacity", value: event.capacity },
@@ -89,7 +94,7 @@ export default async function EventDetailPage({ params }: PageProps) {
 
         <div className="grid gap-10 lg:grid-cols-[1fr_min(20rem,100%)] lg:items-start lg:gap-12">
           <div className="space-y-12">
-            <EventRoster eventId={event.id} rows={rosterRows} />
+            <EventRoster eventId={event.id} rows={rosterRows} appBaseUrl={appBaseUrl} />
 
             <section className="space-y-4">
               <div>

@@ -38,6 +38,7 @@ export async function GET(_req: Request, { params }: Params) {
       id: a.id,
       name: a.name,
       phone: a.phone,
+      email: a.email,
       dietaryPreference: a.dietaryPreference,
       hasPlusOne: a.hasPlusOne,
       rsvpStatus: a.rsvpStatus,

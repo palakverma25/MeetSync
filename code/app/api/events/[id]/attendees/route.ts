@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { looksLikeEmail } from "@/lib/rsvp";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -21,6 +22,8 @@ export async function POST(req: Request, { params }: Params) {
   const b = body as Record<string, unknown>;
   const name = typeof b.name === "string" ? b.name.trim() : "";
   const phone = typeof b.phone === "string" ? b.phone.trim() : "";
+  const emailRaw = typeof b.email === "string" ? b.email.trim() : "";
+  const email = emailRaw ? emailRaw : null;
   const dietaryPreference =
     typeof b.dietaryPreference === "string" ? b.dietaryPreference.trim() : "";
   const hasPlusOne = Boolean(b.hasPlusOne);
@@ -28,6 +31,10 @@ export async function POST(req: Request, { params }: Params) {
     typeof b.rsvpStatus === "string" && ["confirmed", "declined", "pending"].includes(b.rsvpStatus)
       ? b.rsvpStatus
       : "confirmed";
+
+  if (email && !looksLikeEmail(email)) {
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  }
 
   if (!name || !phone) {
     return NextResponse.json(
@@ -41,6 +48,7 @@ export async function POST(req: Request, { params }: Params) {
       eventId,
       name,
       phone,
+      email,
       dietaryPreference,
       hasPlusOne,
       rsvpStatus,
@@ -52,6 +60,7 @@ export async function POST(req: Request, { params }: Params) {
       id: attendee.id,
       name: attendee.name,
       phone: attendee.phone,
+      email: attendee.email,
       dietaryPreference: attendee.dietaryPreference,
       hasPlusOne: attendee.hasPlusOne,
       rsvpStatus: attendee.rsvpStatus,

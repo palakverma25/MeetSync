@@ -24,20 +24,22 @@ Staff can:
 - Work the **roster**: add walk-ins or late RSVPs, and spot **no-shows** (confirmed but never checked in).
 - Use **check-in mode**: big tap targets, search by name or phone, **one tap to check in**, safe if someone taps twice, with **undo** when needed.
 - **Export who attended as CSV** for Excel and the next round of invites.
-- **Share a WhatsApp RSVP link** from the roster (`wa.me` prefilled message) when a WhatsApp number is set up.
+- **Email self-RSVP:** each guest on the roster gets a **secret link** (`/rsvp/[token]`). With **Resend** configured, the organizer can send that link by email; otherwise they **copy the link** from the roster. The guest submits **Attending / Not sure / Can’t make it** plus dietary and +1; the roster updates the same `rsvpStatus` as the dashboard dropdown.
 
 ## Why only this (for now)
 
 We had about a **weekend-sized** window. The biggest win was **reliable check-in** and **trustworthy “who showed up”** — not another chat thread or column jungle. A **searchable, thumb-friendly list** beats spreadsheet detail for someone standing at the door.
 
-**We did not build** (yet): public RSVP websites, payments, calendar sync, SMS, QR at the door, multi-tenant SaaS, or full role-based access control.
+**We did not build** (yet): payments, calendar sync, SMS, QR at the door, multi-tenant SaaS, or full role-based access control. **Public RSVP** here means a **tokenized link per guest** (no login), not a branded consumer RSVP site.
 
-**WhatsApp RSVP today** is an **organizer-shared link**; guests message **your** WhatsApp number. **Automatically turning inbound messages into roster rows** needs Meta’s **WhatsApp Business / Cloud API** (webhooks, stable hosting) — that’s future work, not this repo.
+**Email RSVP today** uses **Resend** (or copy-link only): links include an unguessable token; treat links like passwords.
 
-## On the door device
+**WhatsApp RSVP** (organizer `wa.me` link or inbound replies → roster) is **not in the UI for now**; ops may still coordinate in WhatsApp manually. **Automatically turning inbound messages into roster rows** needs Meta’s **WhatsApp Business / Cloud API** — future work.
 
-- **Browser notifications** (and vibration where supported) when a guest is checked in — only after the user allows notifications on that device.
-- Guests are **not** “pushed” from our servers; they use normal WhatsApp through the link you share.
+## Email invites
+
+- Sent through **Resend** when `RESEND_API_KEY` and `EMAIL_FROM` are set; RSVP links use `APP_BASE_URL` (or `VERCEL_URL` on Vercel) so buttons work in production.
+- Without Resend, organizers **copy the RSVP link** from the roster.
 
 ## When something was unclear, we picked…
 
@@ -46,6 +48,7 @@ We had about a **weekend-sized** window. The biggest win was **reliable check-in
 | **Logins** | **None for the MVP.** Treat the app as running on a **trusted network** (VPN / office), or add a shared secret later. We’re honest that this is a tradeoff. |
 | **RSVP states** | **Confirmed**, **pending**, **declined**. Only **confirmed** guests can be checked in, so we don’t treat declines as attendees. |
 | **Live counts** | Refresh from the server after each action — **no WebSockets**. Fine for one or two people at the door. |
+| **Guest RSVP** | **Email:** token link → guest form → updates roster. |
 | **+1** | One **yes/no flag** on the guest row (not a separate person row). Enough for catering notes for v1. |
 | **Two devices editing** | **SQLite** with **last-write-wins** on the same row is acceptable for v1. A hosted DB (and maybe versioning) would come with production hardening. |
 

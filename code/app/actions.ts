@@ -3,10 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { formatEventDateTime } from "@/lib/formatDate";
+import { sendRsvpInviteEmail } from "@/lib/sendRsvpInvite";
+import { clampDietaryPreference, looksLikeEmail } from "@/lib/rsvp";
 
-export type FormState = { ok: boolean; error: string | null };
+export type FormState = { ok: boolean; error: string | null; info?: string | null };
 
-const ok: FormState = { ok: true, error: null };
+const ok: FormState = { ok: true, error: null, info: null };
 
 export async function createEvent(
   _prev: FormState,
@@ -46,26 +49,50 @@ export async function addAttendee(
 
   const name = String(formData.get("name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
-  const dietaryPreference = String(
-    formData.get("dietaryPreference") ?? "",
-  ).trim();
+  const emailRaw = String(formData.get("email") ?? "").trim();
+  const email = emailRaw ? emailRaw : null;
+  const dietaryPreference = clampDietaryPreference(
+    String(formData.get("dietaryPreference") ?? ""),
+  );
   const hasPlusOne = formData.get("hasPlusOne") === "on";
   const rsvpStatus = String(formData.get("rsvpStatus") ?? "confirmed");
+  const sendInvite = formData.get("sendInvite") === "on";
 
   if (!name || !phone) {
     return { ok: false, error: "Name and phone are required." };
   }
 
-  const status =
+  if (email && !looksLikeEmail(email)) {
+    return { ok: false, error: "Please enter a valid email address, or leave it blank." };
+  }
+
+  if (sendInvite && !email) {
+    return { ok: false, error: "Add an email address to send the RSVP invite." };
+  }
+
+  let status =
     rsvpStatus === "declined" || rsvpStatus === "pending"
       ? rsvpStatus
       : "confirmed";
 
-  await prisma.attendee.create({
+  if (sendInvite) {
+    status = "pending";
+  }
+
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    select: { title: true, venue: true, date: true },
+  });
+  if (!event) {
+    return { ok: false, error: "Event not found." };
+  }
+
+  const attendee = await prisma.attendee.create({
     data: {
       eventId,
       name,
       phone,
+      email,
       dietaryPreference,
       hasPlusOne,
       rsvpStatus: status,
@@ -74,6 +101,38 @@ export async function addAttendee(
 
   revalidatePath(`/events/${eventId}`);
   revalidatePath(`/events/${eventId}/check-in`);
+
+  if (sendInvite && email) {
+    const sendRes = await sendRsvpInviteEmail({
+      to: email,
+      guestName: name,
+      eventTitle: event.title,
+      eventVenue: event.venue,
+      eventDateLabel: formatEventDateTime(event.date),
+      rsvpToken: attendee.rsvpToken,
+    });
+
+    if (!sendRes.ok) {
+      return {
+        ok: true,
+        error: null,
+        info: `Guest added as pending. Email failed: ${sendRes.error}. Use “Copy RSVP link” on the roster to send the link manually.`,
+      };
+    }
+    if (sendRes.skipped) {
+      return {
+        ok: true,
+        error: null,
+        info: `Guest added as pending. ${sendRes.reason}`,
+      };
+    }
+    return {
+      ok: true,
+      error: null,
+      info: "Guest added and RSVP email sent (pending until they respond).",
+    };
+  }
+
   return ok;
 }
 
@@ -147,4 +206,45 @@ export async function updateAttendeeRsvp(
   revalidatePath(`/events/${eventId}/check-in`);
   revalidatePath("/events");
   return { ok: true as const };
+}
+
+export async function sendGuestRsvpInviteEmail(attendeeId: string): Promise<{
+  ok: boolean;
+  error?: string;
+  info?: string;
+}> {
+  const attendee = await prisma.attendee.findUnique({
+    where: { id: attendeeId },
+    include: {
+      event: { select: { id: true, title: true, venue: true, date: true } },
+    },
+  });
+
+  if (!attendee) {
+    return { ok: false, error: "Guest not found." };
+  }
+
+  if (!attendee.email) {
+    return { ok: false, error: "This guest has no email on file. Add an email or use Copy RSVP link." };
+  }
+
+  const sendRes = await sendRsvpInviteEmail({
+    to: attendee.email,
+    guestName: attendee.name,
+    eventTitle: attendee.event.title,
+    eventVenue: attendee.event.venue,
+    eventDateLabel: formatEventDateTime(attendee.event.date),
+    rsvpToken: attendee.rsvpToken,
+  });
+
+  if (!sendRes.ok) {
+    return { ok: false, error: sendRes.error };
+  }
+
+  if (sendRes.skipped) {
+    return { ok: true, info: sendRes.reason };
+  }
+
+  revalidatePath(`/events/${attendee.eventId}`);
+  return { ok: true, info: "Invite email sent." };
 }

@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Event {
-  id        String     @id @default(cuid())
-  title     String
-  venue     String
-  date      DateTime
-  capacity  Int
-  createdAt DateTime   @default(now())
-  attendees Attendee[]
+  id                  String     @id @default(cuid())
+  title               String
+  venue               String
+  date                DateTime
+  capacity            Int
+  createdAt           DateTime   @default(now())
+  attendees           Attendee[]
 
   @@index([date])
 }
@@ -25,6 +25,10 @@ model Attendee {
   event             Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name              String
   phone             String
+  /** Guest email — optional; used to send self-serve RSVP link */
+  email             String?
+  /** Opaque token for public /rsvp/[token] page; treat as secret */
+  rsvpToken         String    @unique @default(uuid())
   dietaryPreference String    @default("")
   hasPlusOne        Boolean   @default(false)
   rsvpStatus        String    @default("confirmed")

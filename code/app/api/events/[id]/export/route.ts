@@ -27,13 +27,14 @@ export async function GET(_req: Request, { params }: Params) {
     orderBy: { name: "asc" },
   });
 
-  const header = ["name", "phone", "dietaryPreference", "hasPlusOne", "checkedInAt"];
+  const header = ["name", "phone", "email", "dietaryPreference", "hasPlusOne", "checkedInAt"];
   const lines = [
     header.join(","),
     ...rows.map((r) =>
       [
         csvEscape(r.name),
         csvEscape(r.phone),
+        csvEscape(r.email ?? ""),
         csvEscape(r.dietaryPreference),
         r.hasPlusOne ? "yes" : "no",
         csvEscape(r.checkedInAt!.toISOString()),
