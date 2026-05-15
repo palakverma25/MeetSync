@@ -17,6 +17,20 @@ Event check-in and self-serve email RSVP. Application code lives in **[`code/`](
 
 4. Deploy. The build runs `prisma migrate deploy` then `next build`, which creates tables on first deploy.
 
+### Deploy with Vercel CLI
+
+From `code/` (requires `npx vercel login` once):
+
+```bash
+cd code
+npx vercel env add DATABASE_URL   # paste your postgresql://… URL (Production + Preview if prompted)
+npx vercel deploy --prod --yes
+```
+
+Without **`DATABASE_URL`** on Vercel, `npm run build` fails — Prisma cannot run migrations. Optional vars (`APP_BASE_URL`, Resend) work the same way (`npx vercel env add …`) or in the dashboard.
+
+Local **`code/.env` is not uploaded** (see **`code/.vercelignore`**), so secrets belong only in Vercel env vars.
+
 ## Local development
 
 See **[`code/README.md`](./code/README.md)** for setup, including a PostgreSQL `DATABASE_URL` and `npm run db:migrate`.
