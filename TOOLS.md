@@ -16,7 +16,7 @@ This is what the project is built with, and why those choices made sense for a s
 
 ## Things we did *not* reach for (and why)
 
-- **PostgreSQL from day one** — Great when you have real concurrency and hosting lined up. **SQLite** kept setup instant and fine for “one team, one machine” while we proved the flow.
+- **SQLite** — Fine for a solo laptop demo, but not for Vercel/serverless (no durable local file DB). We used **PostgreSQL from day one** so local dev matches deploy.
 - **TanStack Query** — Shines when the browser holds a big client-side cache. Here we lean on **server actions**, **`revalidatePath`**, and **`router.refresh()`** so the UI stays simple.
 - **WebSockets** — Nice for live dashboards; **refreshing after each check-in** matched the brief with less moving parts.
 - **Separate React SPA + Express API** — Totally valid; we wanted **one deployable app** and less glue for this scope, so **Next.js** carried both jobs.

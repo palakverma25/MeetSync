@@ -23,6 +23,7 @@ Staff can:
 - Scan **upcoming and recent events** with capacity, roster size, confirmed RSVPs, and how many are already checked in.
 - Work the **roster**: add walk-ins or late RSVPs, and spot **no-shows** (confirmed but never checked in).
 - Use **check-in mode**: big tap targets, search by name or phone, **one tap to check in**, safe if someone taps twice, with **undo** when needed.
+- **Walk-ins at the door** are added from the **event roster** (not the check-in screen) so door staff search and tap without a second “add guest” flow on the same page.
 - **Export who attended as CSV** for Excel and the next round of invites.
 - **Email self-RSVP:** each guest on the roster gets a **secret link** (`/rsvp/[token]`). With **Resend** configured, the organizer can send that link by email; otherwise they **copy the link** from the roster. The guest submits **Attending / Not sure / Can’t make it** plus dietary and +1; the roster updates the same `rsvpStatus` as the dashboard dropdown.
 
@@ -50,6 +51,7 @@ We had about a **weekend-sized** window. The biggest win was **reliable check-in
 | **Live counts** | Refresh from the server after each action — **no WebSockets**. Fine for one or two people at the door. |
 | **Guest RSVP** | **Email:** token link → guest form → updates roster. |
 | **+1** | One **yes/no flag** on the guest row (not a separate person row). Enough for catering notes for v1. |
+| **Capacity** | **Informational only** — shown on events and the roster for planning; we do **not** block adding guests over capacity in v1. |
 | **Two devices editing** | **PostgreSQL** with **last-write-wins** on the same row is acceptable for v1. Stronger concurrency or versioning would come with production hardening. |
 
 ## How we’d know it worked

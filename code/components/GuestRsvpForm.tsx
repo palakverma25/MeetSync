@@ -38,6 +38,44 @@ function defaultChecked(value: string, current: string) {
   return current === value;
 }
 
+function successCopy(status: string | undefined, firstName: string, eventTitle: string) {
+  switch (status) {
+    case "confirmed":
+      return {
+        heading: `You're all set, ${firstName}!`,
+        body: (
+          <>
+            We saved your RSVP for{" "}
+            <span className="font-semibold text-stone-800 dark:text-stone-200">{eventTitle}</span>.
+            See you there!
+          </>
+        ),
+      };
+    case "declined":
+      return {
+        heading: `Thanks for letting us know, ${firstName}`,
+        body: (
+          <>
+            We saved that you can&apos;t make{" "}
+            <span className="font-semibold text-stone-800 dark:text-stone-200">{eventTitle}</span>.
+            Hope to see you at a future event.
+          </>
+        ),
+      };
+    default:
+      return {
+        heading: `Response saved, ${firstName}`,
+        body: (
+          <>
+            We saved your RSVP for{" "}
+            <span className="font-semibold text-stone-800 dark:text-stone-200">{eventTitle}</span>.
+            You can use this link again if your plans change.
+          </>
+        ),
+      };
+  }
+}
+
 export function GuestRsvpForm({
   token,
   guestName,
@@ -52,6 +90,7 @@ export function GuestRsvpForm({
   const firstName = guestName.trim().split(/\s+/)[0] || guestName;
 
   if (state.ok) {
+    const copy = successCopy(state.rsvpStatus, firstName, eventTitle);
     return (
       <div className={`${cardClass} px-5 py-7 text-center sm:px-6`}>
         <div
@@ -69,12 +108,10 @@ export function GuestRsvpForm({
           </svg>
         </div>
         <h1 className="mt-3 text-lg font-bold tracking-tight text-stone-900 dark:text-white">
-          You&apos;re all set, {firstName}!
+          {copy.heading}
         </h1>
         <p className="mt-1.5 text-[13px] leading-relaxed text-stone-600 dark:text-stone-400">
-          We saved your RSVP for{" "}
-          <span className="font-semibold text-stone-800 dark:text-stone-200">{eventTitle}</span>.
-          See you there!
+          {copy.body}
         </p>
         <p className="mt-3 text-[11px] text-stone-500">{eventVenue} · {eventWhen}</p>
       </div>

@@ -1,0 +1,11 @@
+# App package (root directory for deploy is `code/`)
+code/node_modules/
+code/.next/
+code/out/
+code/.vercel/
+
+# Secrets — never commit
+.env
+code/.env
+code/.env.local
+code/.env.*.local

@@ -5,8 +5,17 @@ import { prisma } from "@/lib/prisma";
 import { clampDietaryPreference } from "@/lib/rsvp";
 
 const RSVP_OPTIONS = ["confirmed", "pending", "declined"] as const;
+type RsvpStatus = (typeof RSVP_OPTIONS)[number];
 
-export type GuestRsvpState = { ok: boolean; error: string | null };
+function parseRsvpStatus(raw: string): RsvpStatus {
+  return RSVP_OPTIONS.includes(raw as RsvpStatus) ? (raw as RsvpStatus) : "pending";
+}
+
+export type GuestRsvpState = {
+  ok: boolean;
+  error: string | null;
+  rsvpStatus?: RsvpStatus;
+};
 
 export async function submitGuestRsvp(
   _prev: GuestRsvpState,
@@ -26,10 +35,7 @@ export async function submitGuestRsvp(
     return { ok: false, error: "This invitation link is invalid or has expired." };
   }
 
-  const raw = String(formData.get("rsvpStatus") ?? "pending");
-  const status = RSVP_OPTIONS.includes(raw as (typeof RSVP_OPTIONS)[number])
-    ? raw
-    : "pending";
+  const status = parseRsvpStatus(String(formData.get("rsvpStatus") ?? "pending"));
 
   const dietaryPreference = clampDietaryPreference(
     String(formData.get("dietaryPreference") ?? ""),
@@ -61,5 +67,5 @@ export async function submitGuestRsvp(
   revalidatePath("/events");
   revalidatePath(`/rsvp/${token}`);
 
-  return { ok: true, error: null };
+  return { ok: true, error: null, rsvpStatus: status };
 }
