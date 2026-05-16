@@ -8,7 +8,7 @@ export const metadata = {
 export default function NewEventPage() {
   return (
     <div className="flex-1">
-      <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-6 sm:px-5 sm:py-7 md:px-6">
+      <div className="mx-auto w-full max-w-6xl space-y-5 py-2 sm:space-y-6 sm:py-4">
         <header className="space-y-3">
           <Link
             href="/events"

@@ -11,7 +11,7 @@ export default async function EventsDashboardPage() {
 
   return (
     <div className="flex-1">
-      <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-6 sm:px-5 sm:py-7 md:px-6">
+      <div className="mx-auto w-full max-w-6xl space-y-5 py-2 sm:space-y-6 sm:py-4">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
@@ -24,7 +24,7 @@ export default async function EventsDashboardPage() {
           </div>
           <Link
             href="/events/new"
-            className="inline-flex h-9 shrink-0 items-center justify-center self-start rounded-full bg-teal-600 px-5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-teal-500 sm:self-auto"
+            className="inline-flex h-10 w-full items-center justify-center rounded-full bg-teal-600 px-5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-teal-500 sm:h-9 sm:w-auto sm:self-auto"
           >
             New event
           </Link>

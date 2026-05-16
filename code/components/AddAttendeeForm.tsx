@@ -16,7 +16,7 @@ export function AddAttendeeForm({ eventId }: { eventId: string }) {
   return (
     <form
       action={formAction}
-      className="flex max-h-[min(28rem,calc(100dvh-5rem))] flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50 lg:max-h-[calc(100dvh-5.5rem)]"
+      className="flex max-h-none flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50 max-lg:max-h-[min(28rem,calc(100dvh-8rem))] lg:max-h-[calc(100dvh-5.5rem)]"
     >
       <input type="hidden" name="eventId" value={eventId} />
       <div className="shrink-0 border-b border-stone-100 px-3 py-2.5 dark:border-stone-800 sm:px-3.5">

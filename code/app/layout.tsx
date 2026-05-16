@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     "Internal event roster, door check-in, and attendance exports for your ops team.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

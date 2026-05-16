@@ -92,7 +92,67 @@ export function EventRoster({
         </p>
       ) : null}
 
-      <div className="overflow-x-auto">
+      {/* Mobile card list */}
+      <ul className="divide-y divide-stone-100 dark:divide-stone-800 lg:hidden">
+        {filtered.length === 0 ? (
+          <li className="px-3 py-8 text-center text-[13px] text-stone-500 sm:px-4">
+            No guests match your search.
+          </li>
+        ) : (
+          filtered.map((a) => {
+            const busy = isPending && pendingId === a.id;
+            return (
+              <li key={a.id} className="space-y-3 px-3 py-3.5 sm:px-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-medium text-stone-900 dark:text-white">{a.name}</div>
+                    <div className="mt-0.5 text-[12px] text-stone-500 dark:text-stone-400">{a.phone}</div>
+                    {a.email ? (
+                      <div className="mt-0.5 truncate text-[12px] text-stone-500 dark:text-stone-400">{a.email}</div>
+                    ) : null}
+                  </div>
+                  {a.checkedInAt ? (
+                    <span className="shrink-0 rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-semibold text-teal-700 dark:bg-teal-950/40 dark:text-teal-300">
+                      Checked in
+                    </span>
+                  ) : null}
+                </div>
+
+                <label className="block">
+                  <span className="mb-1 block text-[11px] font-medium text-stone-500 dark:text-stone-400">RSVP</span>
+                  <select
+                    aria-label={`RSVP for ${a.name}`}
+                    className={selectClass}
+                    value={a.rsvpStatus}
+                    disabled={busy}
+                    onChange={(e) => onRsvpChange(a.id, e.target.value)}
+                  >
+                    <option value="confirmed">Confirmed</option>
+                    <option value="pending">Pending</option>
+                    <option value="declined">Declined</option>
+                  </select>
+                </label>
+
+                {(a.hasPlusOne || a.dietaryPreference) && (
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-stone-600 dark:text-stone-400">
+                    {a.hasPlusOne ? <span>+1 guest</span> : null}
+                    {a.dietaryPreference ? <span>Diet: {a.dietaryPreference}</span> : null}
+                  </div>
+                )}
+
+                <RsvpInviteActions
+                  attendeeId={a.id}
+                  email={a.email}
+                  rsvpToken={a.rsvpToken}
+                  appBaseUrl={appBaseUrl}
+                />
+              </li>
+            );
+          })
+        )}
+      </ul>
+
+      <div className="hidden overflow-x-auto lg:block">
         <table className="w-full min-w-[46rem] text-left text-[13px]">
           <thead className="bg-stone-50/90 text-[11px] font-medium text-stone-500 dark:bg-stone-800/50 dark:text-stone-400">
             <tr>

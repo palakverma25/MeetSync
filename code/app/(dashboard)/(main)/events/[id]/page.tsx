@@ -45,7 +45,7 @@ export default async function EventDetailPage({ params }: PageProps) {
 
   return (
     <div className="flex-1">
-      <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-6 sm:px-5 sm:py-7 md:px-6">
+      <div className="mx-auto w-full max-w-6xl space-y-5 py-2 sm:space-y-6 sm:py-4">
         <header className="space-y-5">
           <nav className="text-[13px] text-stone-500 dark:text-stone-400">
             <Link href="/events" className="font-medium hover:text-teal-600 dark:hover:text-teal-400">
@@ -55,25 +55,25 @@ export default async function EventDetailPage({ params }: PageProps) {
             <span className="text-stone-700 dark:text-stone-300">Roster</span>
           </nav>
 
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div className="space-y-1">
-              <h1 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white md:text-[1.65rem]">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0 space-y-1">
+              <h1 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white lg:text-[1.65rem]">
                 {event.title}
               </h1>
               <p className="text-sm text-stone-600 dark:text-stone-400">
                 {event.venue} · {formatEventDateTime(event.date)}
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex shrink-0 flex-col gap-2 max-lg:w-full lg:flex-row lg:flex-wrap lg:justify-end">
               <Link
                 href={`/events/${event.id}/check-in`}
-                className="inline-flex h-9 items-center justify-center rounded-full bg-teal-600 px-4 text-[13px] font-semibold text-white shadow-sm transition hover:bg-teal-500"
+                className="inline-flex h-10 w-full items-center justify-center rounded-full bg-teal-600 px-4 text-[13px] font-semibold text-white shadow-sm transition hover:bg-teal-500 lg:h-9 lg:w-auto"
               >
                 Open check-in mode
               </Link>
               <a
                 href={`/api/events/${event.id}/export`}
-                className="inline-flex h-9 items-center justify-center rounded-full bg-white px-4 text-[13px] font-semibold text-stone-800 shadow-sm ring-1 ring-stone-200/80 transition hover:bg-stone-50 dark:bg-stone-900 dark:text-stone-100 dark:ring-stone-700 dark:hover:bg-stone-800"
+                className="inline-flex h-10 w-full items-center justify-center rounded-full bg-white px-4 text-[13px] font-semibold text-stone-800 shadow-sm ring-1 ring-stone-200/80 transition hover:bg-stone-50 dark:bg-stone-900 dark:text-stone-100 dark:ring-stone-700 dark:hover:bg-stone-800 lg:h-9 lg:w-auto"
               >
                 Export CSV
               </a>
@@ -95,8 +95,9 @@ export default async function EventDetailPage({ params }: PageProps) {
           </div>
         </header>
 
-        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-6">
-          <div className="min-w-0 space-y-6">
+        {/* Mobile: add guest first. Desktop (lg+): roster left, add-guest sidebar right */}
+        <div className="flex w-full flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-6">
+          <div className="order-2 min-w-0 space-y-6 lg:order-1 lg:col-start-1">
             <EventRoster eventId={event.id} rows={rosterRows} appBaseUrl={appBaseUrl} />
 
             <section className="space-y-3">
@@ -125,7 +126,7 @@ export default async function EventDetailPage({ params }: PageProps) {
             </section>
           </div>
 
-          <aside className="lg:sticky lg:top-6 lg:self-start">
+          <aside className="order-1 w-full lg:order-2 lg:col-start-2 lg:row-start-1 lg:sticky lg:top-6 lg:self-start">
             <AddAttendeeForm eventId={event.id} />
           </aside>
         </div>

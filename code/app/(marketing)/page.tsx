@@ -18,7 +18,7 @@ export default function LandingPage() {
             Replace printed lists and messy spreadsheets with one focused workspace:
             roster, door mode, and exports your team can trust.
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-10 flex flex-col items-stretch gap-3 px-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 sm:px-0">
             <Link
               href="/events"
               className="inline-flex h-12 items-center justify-center rounded-full bg-teal-600 px-8 text-sm font-semibold text-white shadow-lg shadow-teal-600/25 transition hover:bg-teal-500"
