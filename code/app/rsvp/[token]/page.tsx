@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GuestRsvpForm } from "@/components/GuestRsvpForm";
+import { MeetSyncWordmark } from "@/components/MeetSyncWordmark";
 import { formatEventDateTime } from "@/lib/formatDate";
 import { prisma } from "@/lib/prisma";
 
@@ -26,16 +26,11 @@ export default async function GuestRsvpPage({ params }: PageProps) {
   if (!attendee) notFound();
 
   return (
-    <div className="min-h-screen bg-stone-100 px-4 py-12 dark:bg-stone-950">
-      <div className="mx-auto max-w-lg">
-        <p className="mb-6 text-center">
-          <Link
-            href="/"
-            className="text-sm font-medium text-stone-500 transition hover:text-teal-600 dark:text-stone-400 dark:hover:text-teal-400"
-          >
-            MeetSync
-          </Link>
-        </p>
+    <div className="min-h-screen bg-stone-100 px-4 py-6 dark:bg-stone-950 sm:py-8">
+      <div className="mx-auto w-full max-w-sm">
+        <div className="mb-5 flex justify-center">
+          <MeetSyncWordmark size="sm" />
+        </div>
         <GuestRsvpForm
           token={token}
           guestName={attendee.name}

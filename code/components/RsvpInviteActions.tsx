@@ -45,12 +45,12 @@ export function RsvpInviteActions({ attendeeId, email, rsvpToken, appBaseUrl }: 
   }
 
   return (
-    <div className="flex min-w-[10rem] flex-col gap-1.5">
+    <div className="flex min-w-[8rem] flex-col gap-1">
       <div className="flex flex-wrap gap-1.5">
         <button
           type="button"
           onClick={copy}
-          className="rounded-lg bg-stone-100 px-2.5 py-1 text-xs font-semibold text-stone-800 ring-1 ring-stone-200/90 transition hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-100 dark:ring-stone-600 dark:hover:bg-stone-700"
+          className="rounded-md bg-stone-100 px-2 py-0.5 text-[10px] font-semibold text-stone-800 ring-1 ring-stone-200/90 transition hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-100 dark:ring-stone-600 dark:hover:bg-stone-700"
         >
           Copy link
         </button>
@@ -59,7 +59,7 @@ export function RsvpInviteActions({ attendeeId, email, rsvpToken, appBaseUrl }: 
             type="button"
             disabled={pending}
             onClick={send}
-            className="rounded-lg bg-teal-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-teal-500 disabled:opacity-50"
+            className="rounded-md bg-teal-600 px-2 py-0.5 text-[10px] font-semibold text-white shadow-sm transition hover:bg-teal-500 disabled:opacity-50"
           >
             {pending ? "…" : "Email invite"}
           </button>
