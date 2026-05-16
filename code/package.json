@@ -12,6 +12,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "vercel:push-env": "node scripts/push-vercel-env-from-dotenv.mjs",
     "postinstall": "prisma generate"
   },
   "prisma": {
@@ -19,7 +20,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
-    "next": "^15.3.3",
+    "next": "^15.3.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -30,7 +31,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^15.3.3",
+    "eslint-config-next": "^15.3.6",
     "prisma": "^6.19.3",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",

@@ -41,6 +41,8 @@ To **send** invite emails from the roster, add to `.env`:
 
 Without Resend, organizers still use **Copy RSVP link** on each roster row. Guests always open `/rsvp/…` in the browser to respond.
 
+On **Vercel**, set the same variables in the project dashboard (or run `npm run vercel:push-env` from `code/` to copy `APP_BASE_URL`, `RESEND_API_KEY`, and `EMAIL_FROM` from your local `code/.env`).
+
 Open [http://localhost:3000](http://localhost:3000) for the **landing page**, then use **Open app** or go to [`/events`](http://localhost:3000/events) for the dashboard. Each event has its own **roster** (`/events/[id]`) and **check-in** (`/events/[id]/check-in`). Product detail page: [`/features`](http://localhost:3000/features).
 
 ## Scripts
@@ -52,4 +54,4 @@ Open [http://localhost:3000](http://localhost:3000) for the **landing page**, th
 | `npm run db:migrate` | Apply migrations (CI / production) |
 | `npm run db:migrate:dev` | Create/apply migrations in development |
 | `npm run db:push` | Push schema without migration files (prototyping only) |
-| `npm run db:seed` | Load sample events and attendees |
+| `npm run vercel:push-env` | Copy `APP_BASE_URL`, `RESEND_API_KEY`, `EMAIL_FROM` from `code/.env` to linked Vercel project |

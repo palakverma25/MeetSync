@@ -6,30 +6,42 @@ Event check-in and self-serve email RSVP. Application code lives in **[`code/`](
 
 1. Push this repo to GitHub and **import** it in [Vercel](https://vercel.com).
 2. Set **Root Directory** to `code` (Framework Preset: Next.js).
-3. Add **Environment variables** (Production — add Preview too if you want email/DB there):
+3. **Database (recommended: Neon via Vercel)** — from your machine, in `code/` (after `npx vercel login` and linking the project):
 
-   | Name | Example |
-   |------|---------|
-   | `DATABASE_URL` | PostgreSQL connection string ([Neon](https://neon.tech), Supabase, etc.) — **not** SQLite |
-   | `APP_BASE_URL` | `https://your-project.vercel.app` or your custom domain (no trailing slash) |
-   | `RESEND_API_KEY` | From [Resend](https://resend.com) (optional; omit to use “Copy RSVP link” only) |
-   | `EMAIL_FROM` | e.g. `MeetSync <invites@yourdomain.com>` (domain verified in Resend) |
+   ```bash
+   cd code
+   npx vercel --non-interactive integration accept-terms neon --yes
+   npx vercel --non-interactive integration add neon -e production -e preview
+   ```
 
-4. Deploy. The build runs `prisma migrate deploy` then `next build`, which creates tables on first deploy.
+   That provisions Postgres and sets **`DATABASE_URL`** (and related Neon variables) on Vercel for production and preview.
 
-### Deploy with Vercel CLI
+   **Alternative:** create a database in [Neon](https://neon.tech) or Supabase and add **`DATABASE_URL`** manually under **Project → Settings → Environment Variables** (must be `postgresql://…`).
 
-From `code/` (requires `npx vercel login` once):
+4. **App URL & email (optional)** — set **`APP_BASE_URL`** to your stable production URL (e.g. `https://your-project.vercel.app`, no trailing slash). Add **`RESEND_API_KEY`** and **`EMAIL_FROM`** if you want RSVP emails from production. After you have those in local **`code/.env`**, you can push them to Vercel:
+
+   ```bash
+   cd code
+   npm run vercel:push-env
+   ```
+
+5. Deploy (Git push to the connected branch, or `npx vercel --non-interactive deploy --prod` from `code/`). The build runs `prisma migrate deploy` then `next build`.
+
+### If the site returns 401 in the browser
+
+Your Vercel team may have **Deployment Protection** enabled. In Vercel: **Project → Settings → Deployment Protection** and allow public access for production (or complete the login gate).
+
+### CLI-only env (without Neon integration)
 
 ```bash
 cd code
-npx vercel env add DATABASE_URL   # paste your postgresql://… URL (Production + Preview if prompted)
-npx vercel deploy --prod --yes
+npx vercel env add DATABASE_URL   # paste postgresql://… for Production (and Preview if needed)
+npx vercel --non-interactive deploy --prod
 ```
 
-Without **`DATABASE_URL`** on Vercel, `npm run build` fails — Prisma cannot run migrations. Optional vars (`APP_BASE_URL`, Resend) work the same way (`npx vercel env add …`) or in the dashboard.
+Without **`DATABASE_URL`** on Vercel, `npm run build` fails — Prisma cannot run migrations.
 
-Local **`code/.env` is not uploaded** (see **`code/.vercelignore`**), so secrets belong only in Vercel env vars.
+Local **`code/.env` is not uploaded** to Vercel builds (see **`code/.vercelignore`**); use the dashboard or `vercel env add` for secrets.
 
 ## Local development
 
