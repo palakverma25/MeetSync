@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MeetSyncWordmark } from "@/components/MeetSyncWordmark";
+import {
+  DASHBOARD_LOGIN_HREF,
+  signInButtonHeader,
+  signInButtonMobile,
+} from "@/components/marketing/marketingLinks";
 
 const link =
   "block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-600 transition hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-white";
@@ -28,11 +33,8 @@ export function MarketingHeader() {
           <Link href="/features" className="text-sm font-medium text-stone-600 transition hover:text-stone-900 dark:text-stone-400 dark:hover:text-white">
             Features
           </Link>
-          <Link
-            href="/events"
-            className="rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-500"
-          >
-            Open app
+          <Link href={DASHBOARD_LOGIN_HREF} className={signInButtonHeader}>
+            Sign in
           </Link>
         </nav>
 
@@ -65,11 +67,11 @@ export function MarketingHeader() {
             Features
           </Link>
           <Link
-            href="/events"
-            className="mt-1 block rounded-full bg-teal-600 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-teal-500"
+            href={DASHBOARD_LOGIN_HREF}
+            className={signInButtonMobile}
             onClick={() => setOpen(false)}
           >
-            Open app
+            Sign in
           </Link>
         </nav>
       ) : null}

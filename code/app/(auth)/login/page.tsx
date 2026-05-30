@@ -24,9 +24,6 @@ export default async function LoginPage({ searchParams }: PageProps) {
       <div className="w-full max-w-sm">
         <LoginForm nextPath={nextPath} />
       </div>
-      <p className="mt-8 max-w-sm text-center text-[11px] text-stone-500 dark:text-stone-400">
-        Staff sign-in for events, rosters, and check-in. Guest RSVP links stay public.
-      </p>
     </div>
   );
 }

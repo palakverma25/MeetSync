@@ -49,9 +49,6 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
       <h1 className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
         Sign in
       </h1>
-      <p className="mt-1 text-[13px] text-stone-500 dark:text-stone-400">
-        Use your ops team account.
-      </p>
 
       <div className="mt-5 space-y-4">
         <label className="block text-[12px] font-medium text-stone-800 dark:text-stone-200">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DASHBOARD_LOGIN_HREF } from "@/components/marketing/marketingLinks";
 
 export const metadata = {
   title: "Features — MeetSync",
@@ -66,10 +67,10 @@ export default function FeaturesPage() {
         <div className="mt-12 rounded-3xl bg-teal-600 p-8 text-center text-white shadow-sm dark:bg-teal-700">
           <p className="text-lg font-medium">Ready to try the app?</p>
           <Link
-            href="/events"
+            href={DASHBOARD_LOGIN_HREF}
             className="mt-4 inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-teal-800 hover:bg-teal-50"
           >
-            Go to dashboard
+            Sign in to dashboard
           </Link>
         </div>
       </div>

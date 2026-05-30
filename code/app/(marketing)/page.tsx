@@ -1,4 +1,8 @@
 import Link from "next/link";
+import {
+  DASHBOARD_LOGIN_HREF,
+  signInButtonPrimary,
+} from "@/components/marketing/marketingLinks";
 
 export default function LandingPage() {
   return (
@@ -19,15 +23,12 @@ export default function LandingPage() {
             roster, door mode, and exports your team can trust.
           </p>
           <div className="mt-10 flex flex-col items-stretch gap-3 px-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 sm:px-0">
-            <Link
-              href="/events"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-teal-600 px-8 text-sm font-semibold text-white shadow-lg shadow-teal-600/25 transition hover:bg-teal-500"
-            >
-              Launch dashboard
+            <Link href={DASHBOARD_LOGIN_HREF} className={signInButtonPrimary}>
+              Sign in to dashboard
             </Link>
             <Link
               href="/features"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-stone-300 bg-white/80 px-8 text-sm font-semibold text-stone-800 backdrop-blur transition hover:bg-white dark:border-stone-600 dark:bg-stone-900/80 dark:text-stone-100 dark:hover:bg-stone-800"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-stone-300 bg-white/80 px-8 text-sm font-semibold text-stone-800 backdrop-blur transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-400 dark:border-stone-600 dark:bg-stone-900/80 dark:text-stone-100 dark:hover:bg-stone-800 dark:focus-visible:outline-stone-500"
             >
               Explore features
             </Link>
@@ -66,7 +67,7 @@ export default function LandingPage() {
               {
                 title: "Events hub",
                 body: "Every show at a glance — capacity, RSVPs, and who is already in the room.",
-                href: "/events",
+                href: DASHBOARD_LOGIN_HREF,
               },
               {
                 title: "Roster & no-shows",

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DASHBOARD_LOGIN_HREF } from "@/components/marketing/marketingLinks";
 
 export function MarketingFooter() {
   return (
@@ -11,8 +12,8 @@ export function MarketingFooter() {
           <Link href="/" className="text-stone-600 hover:text-teal-600 dark:text-stone-400 dark:hover:text-teal-400">
             Home
           </Link>
-          <Link href="/events" className="text-stone-600 hover:text-teal-600 dark:text-stone-400 dark:hover:text-teal-400">
-            Dashboard
+          <Link href={DASHBOARD_LOGIN_HREF} className="text-stone-600 hover:text-teal-600 dark:text-stone-400 dark:hover:text-teal-400">
+            Sign in
           </Link>
         </div>
       </div>
