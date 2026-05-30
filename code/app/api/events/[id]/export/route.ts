@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireApiAuth } from "@/lib/auth/apiAuth";
 import { prisma } from "@/lib/prisma";
 
 type Params = { params: Promise<{ id: string }> };
@@ -10,7 +11,10 @@ function csvEscape(value: string) {
   return value;
 }
 
-export async function GET(_req: Request, { params }: Params) {
+export async function GET(req: Request, { params }: Params) {
+  const auth = await requireApiAuth(req);
+  if (auth.response) return auth.response;
+
   const { id: eventId } = await params;
 
   const event = await prisma.event.findUnique({

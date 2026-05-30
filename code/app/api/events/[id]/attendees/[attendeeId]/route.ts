@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
+import { requireApiAuth } from "@/lib/auth/apiAuth";
 import { prisma } from "@/lib/prisma";
 
 type Params = { params: Promise<{ id: string; attendeeId: string }> };
 
 export async function PATCH(req: Request, { params }: Params) {
+  const auth = await requireApiAuth(req);
+  if (auth.response) return auth.response;
+
   const { id: eventId, attendeeId } = await params;
 
   let body: unknown;

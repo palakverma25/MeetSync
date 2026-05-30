@@ -3,9 +3,22 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppNavLinks } from "@/components/app/AppNavLinks";
+import { UserMenu } from "@/components/auth/UserMenu";
 import { MeetSyncWordmark } from "@/components/MeetSyncWordmark";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export type AppShellUser = {
+  name: string;
+  email: string;
+  role: string;
+};
+
+export function AppShell({
+  children,
+  user,
+}: {
+  children: React.ReactNode;
+  user: AppShellUser;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -59,14 +72,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="flex-1 overflow-y-auto px-3 py-3">
               <AppNavLinks onNavigate={() => setMenuOpen(false)} />
             </div>
-            <div className="border-t border-stone-100 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] dark:border-stone-800">
-              <Link
-                href="/"
-                onClick={() => setMenuOpen(false)}
-                className="block rounded-xl px-2.5 py-2.5 text-[12px] font-medium text-stone-500 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-800"
-              >
-                ← Marketing site
-              </Link>
+            <div className="border-t border-stone-100 dark:border-stone-800">
+              <UserMenu
+                name={user.name}
+                email={user.email}
+                role={user.role}
+              />
+              <div className="p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-0">
+                <Link
+                  href="/"
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-xl px-2.5 py-2.5 text-[12px] font-medium text-stone-500 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-800"
+                >
+                  ← Marketing site
+                </Link>
+              </div>
             </div>
           </aside>
         </div>
@@ -87,13 +107,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="flex-1 px-2.5 pb-2 pt-0.5">
               <AppNavLinks />
             </div>
-            <div className="shrink-0 px-2.5 pb-3">
-              <Link
-                href="/"
-                className="block rounded-xl px-2 py-2 text-[11px] font-medium text-stone-500 transition-colors hover:bg-stone-100/80 hover:text-stone-800 dark:hover:bg-white/6 dark:hover:text-stone-300"
-              >
-                ← Marketing site
-              </Link>
+            <div className="shrink-0 border-t border-stone-100 dark:border-stone-800">
+              <UserMenu name={user.name} email={user.email} role={user.role} />
+              <div className="px-2.5 pb-3">
+                <Link
+                  href="/"
+                  className="block rounded-xl px-2 py-2 text-[11px] font-medium text-stone-500 transition-colors hover:bg-stone-100/80 hover:text-stone-800 dark:hover:bg-white/6 dark:hover:text-stone-300"
+                >
+                  ← Marketing site
+                </Link>
+              </div>
             </div>
           </div>
         </aside>

@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
+import { requireApiAuth } from "@/lib/auth/apiAuth";
 import { prisma } from "@/lib/prisma";
 import { parseOptionalEmail, validatePhone } from "@/lib/rsvp";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function POST(req: Request, { params }: Params) {
+  const auth = await requireApiAuth(req);
+  if (auth.response) return auth.response;
+
   const { id: eventId } = await params;
 
   const event = await prisma.event.findUnique({ where: { id: eventId } });

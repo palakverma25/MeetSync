@@ -13,6 +13,7 @@ This is what the project is built with, and why those choices made sense for a s
 | Data layer | **Prisma** | We describe `Event` and `Attendee` in a schema, get typed queries, and use **migrations** (`migrate dev` / `migrate deploy`) for schema changes. |
 | Database | **PostgreSQL** | Required for **Vercel** and similar hosts (no durable SQLite on serverless). Local dev uses the same stack (e.g. Neon, Docker, or Supabase). |
 | Runtime | **Node.js 20** | What Next.js expects; keeps local and deploy environments aligned. |
+| Auth | **JWT (jose) + bcrypt** | HS256 access tokens in **httpOnly** cookies; middleware + server guards; guest RSVP stays token-based. |
 
 ## Things we did *not* reach for (and why)
 

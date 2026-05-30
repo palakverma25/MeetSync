@@ -86,4 +86,22 @@ if (cfg.EMAIL_FROM) {
   }
 }
 
-console.log("Synced APP_BASE_URL (+ Resend vars if present) to Vercel for production & preview.");
+const authVars = [
+  ["JWT_SECRET", true],
+  ["ADMIN_EMAIL", false],
+  ["ADMIN_PASSWORD", true],
+  ["ADMIN_NAME", false],
+];
+
+for (const [name, sensitive] of authVars) {
+  const value = cfg[name]?.trim();
+  if (!value) continue;
+  for (const t of targets) {
+    vercelRm(name, t);
+    vercelAdd(name, t, value, sensitive);
+  }
+}
+
+console.log(
+  "Synced APP_BASE_URL, auth vars (+ Resend if present) to Vercel for production & preview.",
+);

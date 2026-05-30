@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { formatEventDateTime } from "@/lib/formatDate";
 import { sendRsvpInviteEmail } from "@/lib/sendRsvpInvite";
 import { findEventWithSameTitleOnDate } from "@/lib/eventDuplicate";
+import { requireAuth } from "@/lib/auth/requireAuth";
 import { clampDietaryPreference, parseOptionalEmail, validatePhone } from "@/lib/rsvp";
 
 export type FormState = {
@@ -22,6 +23,8 @@ export async function createEvent(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  await requireAuth();
+
   const title = String(formData.get("title") ?? "").trim();
   const venue = String(formData.get("venue") ?? "").trim();
   const dateStr = String(formData.get("date") ?? "").trim();
@@ -60,6 +63,8 @@ export async function addAttendee(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  await requireAuth();
+
   const eventId = String(formData.get("eventId") ?? "").trim();
   if (!eventId) {
     return { ok: false, error: "Missing event." };
@@ -165,6 +170,8 @@ export async function toggleCheckIn(
   attendeeId: string,
   checkIn: boolean,
 ) {
+  await requireAuth();
+
   const attendee = await prisma.attendee.findFirst({
     where: { id: attendeeId, eventId },
   });
@@ -201,6 +208,8 @@ export async function updateAttendeeRsvp(
   attendeeId: string,
   nextStatus: string,
 ) {
+  await requireAuth();
+
   const status = RSVP_OPTIONS.includes(nextStatus as (typeof RSVP_OPTIONS)[number])
     ? nextStatus
     : "confirmed";
@@ -237,6 +246,8 @@ export async function sendGuestRsvpInviteEmail(attendeeId: string): Promise<{
   error?: string;
   info?: string;
 }> {
+  await requireAuth();
+
   const attendee = await prisma.attendee.findUnique({
     where: { id: attendeeId },
     include: {

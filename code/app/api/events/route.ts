@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { requireApiAuth } from "@/lib/auth/apiAuth";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const auth = await requireApiAuth(req);
+  if (auth.response) return auth.response;
   const events = await prisma.event.findMany({
     orderBy: { date: "asc" },
     include: { _count: { select: { attendees: true } } },
@@ -41,6 +44,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const auth = await requireApiAuth(req);
+  if (auth.response) return auth.response;
+
   let body: unknown;
   try {
     body = await req.json();

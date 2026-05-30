@@ -42,11 +42,28 @@ We had about a **weekend-sized** window. The biggest win was **reliable check-in
 - Sent through **Resend** when `RESEND_API_KEY` and `EMAIL_FROM` are set; RSVP links use `APP_BASE_URL` (or `VERCEL_URL` on Vercel) so buttons work in production.
 - Without Resend, organizers **copy the RSVP link** from the roster.
 
+## Staff authentication
+
+Ops sign in at **`/login`** with email + password. On success the server sets an **httpOnly JWT cookie** (`meetsync_token`, HS256, 8-hour lifetime).
+
+| Layer | What it protects |
+| ----- | ---------------- |
+| **Middleware** | `/events/*`, `/api/events/*` — redirects to login or returns 401 |
+| **Layouts** | Dashboard shells call `requireAuth()` |
+| **Server actions** | Every mutation in `app/actions.ts` |
+| **API handlers** | `requireApiAuth()` on each `/api/events/*` route |
+
+**Still public:** `/`, `/features`, `/login`, `/rsvp/[token]` (guest token, not staff JWT).
+
+**Bootstrap:** `npm run db:seed:admin` creates `ADMIN_EMAIL` / `ADMIN_PASSWORD` (see `.env.example`). Production requires **`JWT_SECRET`** (32+ characters).
+
+Passwords stored with **bcrypt** (12 rounds). No public self-registration — admin seed + future user management.
+
 ## When something was unclear, we picked…
 
 | Question | What we did |
 | -------- | ----------- |
-| **Logins** | **None for the MVP.** Treat the app as running on a **trusted network** (VPN / office), or add a shared secret later. We’re honest that this is a tradeoff. |
+| **Logins** | **JWT in httpOnly cookie** — staff sign in at `/login` (email + password, bcrypt). Dashboard and `/api/events/*` require auth; guest `/rsvp/[token]` stays public. Seed admin: `npm run db:seed:admin`. Set `JWT_SECRET` (32+ chars) in production. |
 | **RSVP states** | **Confirmed**, **pending**, **declined**. Only **confirmed** guests can be checked in, so we don’t treat declines as attendees. |
 | **Live counts** | Refresh from the server after each action — **no WebSockets**. Fine for one or two people at the door. |
 | **Guest RSVP** | **Email:** token link → guest form → updates roster. |
