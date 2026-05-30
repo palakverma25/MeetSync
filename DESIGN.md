@@ -52,6 +52,7 @@ We had about a **weekend-sized** window. The biggest win was **reliable check-in
 | **Guest RSVP** | **Email:** token link → guest form → updates roster. |
 | **+1** | One **yes/no flag** on the guest row (not a separate person row). Enough for catering notes for v1. |
 | **Capacity** | **Informational only** — shown on events and the roster for planning; we do **not** block adding guests over capacity in v1. |
+| **Duplicate event names** | **Allowed** — events are keyed by unique `id`, not title (annual “Summer Gala” is fine). UI shows **date · venue** under every title so ops can tell them apart. Creating an event with the **same name on the same calendar date** shows a **warning** and optional **Create anyway** (does not block different years or different dates). |
 | **Two devices editing** | **PostgreSQL** with **last-write-wins** on the same row is acceptable for v1. Stronger concurrency or versioning would come with production hardening. |
 
 ## How we’d know it worked

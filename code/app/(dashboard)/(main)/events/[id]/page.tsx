@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddAttendeeForm } from "@/components/AddAttendeeForm";
 import { EventRoster } from "@/components/EventRoster";
-import { formatEventDateTime } from "@/lib/formatDate";
+import { EventSubtitle } from "@/components/EventSubtitle";
 import { getPublicBaseUrl } from "@/lib/publicUrl";
 import { prisma } from "@/lib/prisma";
 
@@ -60,9 +60,11 @@ export default async function EventDetailPage({ params }: PageProps) {
               <h1 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white lg:text-[1.65rem]">
                 {event.title}
               </h1>
-              <p className="text-sm text-stone-600 dark:text-stone-400">
-                {event.venue} · {formatEventDateTime(event.date)}
-              </p>
+              <EventSubtitle
+                date={event.date}
+                venue={event.venue}
+                className="text-sm text-stone-600 dark:text-stone-400"
+              />
             </div>
             <div className="flex shrink-0 flex-col gap-2 max-lg:w-full lg:flex-row lg:flex-wrap lg:justify-end">
               <Link

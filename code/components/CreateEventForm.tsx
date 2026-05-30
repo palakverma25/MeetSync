@@ -33,6 +33,9 @@ export function CreateEventForm() {
                 placeholder="e.g. Summer Garden Gala"
                 className={field}
               />
+              <p className="mt-1.5 text-[11px] leading-snug text-stone-500 dark:text-stone-400">
+                Reusing a name is fine — we tell events apart by date and venue.
+              </p>
             </label>
             <label className={labelClass}>
               Venue
@@ -96,6 +99,32 @@ export function CreateEventForm() {
         >
           {state.error}
         </div>
+      ) : null}
+
+      {state.info ? (
+        <div
+          className="rounded-xl bg-amber-50 px-3 py-2 text-[13px] text-amber-950 dark:bg-amber-950/35 dark:text-amber-100"
+          role="status"
+        >
+          {state.info}
+        </div>
+      ) : null}
+
+      {state.duplicateWarning ? (
+        <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-amber-200/80 bg-amber-50/80 px-3 py-2.5 text-[13px] text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/25 dark:text-amber-100">
+          <input
+            name="confirmDuplicate"
+            type="checkbox"
+            className="mt-0.5 size-3.5 rounded border-amber-400 text-teal-600 focus:ring-teal-500/30"
+          />
+          <span>
+            <span className="font-medium">Create anyway</span>
+            <span className="mt-0.5 block text-[11px] font-normal opacity-90">
+              Same event name on this date already exists — use this only for a separate session or
+              a new year with the same title.
+            </span>
+          </span>
+        </label>
       ) : null}
 
       <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">

@@ -5,9 +5,16 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatEventDateTime } from "@/lib/formatDate";
 import { sendRsvpInviteEmail } from "@/lib/sendRsvpInvite";
+import { findEventWithSameTitleOnDate } from "@/lib/eventDuplicate";
 import { clampDietaryPreference, parseOptionalEmail, validatePhone } from "@/lib/rsvp";
 
-export type FormState = { ok: boolean; error: string | null; info?: string | null };
+export type FormState = {
+  ok: boolean;
+  error: string | null;
+  info?: string | null;
+  /** Show “Create anyway” when title + calendar date already exists */
+  duplicateWarning?: boolean;
+};
 
 const ok: FormState = { ok: true, error: null, info: null };
 
@@ -28,6 +35,17 @@ export async function createEvent(
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) {
     return { ok: false, error: "Invalid date." };
+  }
+
+  const confirmDuplicate = formData.get("confirmDuplicate") === "on";
+  const duplicate = await findEventWithSameTitleOnDate(title, date);
+  if (duplicate && !confirmDuplicate) {
+    return {
+      ok: false,
+      error: null,
+      duplicateWarning: true,
+      info: `“${duplicate.title}” already exists on this date (${formatEventDateTime(duplicate.date)} · ${duplicate.venue}). Check “Create anyway” below if you meant a separate event.`,
+    };
   }
 
   const event = await prisma.event.create({

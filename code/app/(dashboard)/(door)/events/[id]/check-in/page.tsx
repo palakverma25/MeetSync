@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckInPanel } from "@/components/CheckInPanel";
+import { EventSubtitle } from "@/components/EventSubtitle";
 import { prisma } from "@/lib/prisma";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -49,6 +50,11 @@ export default async function CheckInPage({ params }: PageProps) {
           <h1 className="text-2xl font-bold tracking-tight text-white lg:text-[1.65rem]">
             {event.title}
           </h1>
+          <EventSubtitle
+            date={event.date}
+            venue={event.venue}
+            className="text-sm text-stone-400"
+          />
           <p className="max-w-2xl text-sm text-stone-400">
             Search by name or phone, then tap <span className="font-medium text-stone-300">Check in</span>.
             Undo if you tapped the wrong person.
