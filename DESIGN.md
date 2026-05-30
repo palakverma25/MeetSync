@@ -55,7 +55,7 @@ Ops sign in at **`/login`** with email + password. On success the server sets an
 
 **Still public:** `/`, `/features`, `/login`, `/rsvp/[token]` (guest token, not staff JWT).
 
-**Bootstrap:** `npm run db:seed:admin` creates `ADMIN_EMAIL` / `ADMIN_PASSWORD` (see `.env.example`). Production requires **`JWT_SECRET`** (32+ characters).
+**Bootstrap:** `npm run db:seed:admin` creates the admin user locally (use production `DATABASE_URL` once for prod). Set **`JWT_SECRET`** (32+ random chars) on Vercel — do **not** store `ADMIN_PASSWORD` in Vercel runtime env.
 
 Passwords stored with **bcrypt** (12 rounds). No public self-registration — admin seed + future user management.
 

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { AUTH_COOKIE_NAME, verifyAccessToken } from "@/lib/auth/jwt";
+import { safeInternalPath } from "@/lib/auth/safeRedirect";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -9,8 +10,7 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/login") {
     if (session) {
       const next = request.nextUrl.searchParams.get("next");
-      const dest =
-        next && next.startsWith("/") && !next.startsWith("//") ? next : "/events";
+      const dest = safeInternalPath(next);
       return NextResponse.redirect(new URL(dest, request.url));
     }
     return NextResponse.next();

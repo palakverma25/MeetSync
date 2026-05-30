@@ -1,12 +1,47 @@
 import { PrismaClient } from "@prisma/client";
-import { hashPassword } from "../lib/auth/password";
+import { hashPassword, validatePasswordStrength } from "../lib/auth/password";
 
 const prisma = new PrismaClient();
 
+const LOCAL_DEV_DEFAULT_EMAIL = "admin@meetsync.local";
+const LOCAL_DEV_DEFAULT_PASSWORD = "changeme123";
+
+function isLocalDatabase(url: string) {
+  return (
+    url.includes("localhost") ||
+    url.includes("127.0.0.1") ||
+    url.includes("@localhost:") ||
+    url.includes("51214")
+  );
+}
+
 async function main() {
-  const email = (process.env.ADMIN_EMAIL ?? "admin@meetsync.local").trim().toLowerCase();
-  const password = process.env.ADMIN_PASSWORD ?? "changeme123";
+  const dbUrl = process.env.DATABASE_URL ?? "";
+  const isLocal = isLocalDatabase(dbUrl);
+
+  const email = (process.env.ADMIN_EMAIL ?? LOCAL_DEV_DEFAULT_EMAIL).trim().toLowerCase();
+  const password = process.env.ADMIN_PASSWORD ?? (isLocal ? LOCAL_DEV_DEFAULT_PASSWORD : "");
   const name = process.env.ADMIN_NAME ?? "Admin";
+
+  if (!password) {
+    console.error(
+      "ADMIN_PASSWORD is required when seeding a hosted database. Set it in .env and re-run.",
+    );
+    process.exit(1);
+  }
+
+  const strengthError = validatePasswordStrength(password);
+  if (strengthError) {
+    console.error(strengthError);
+    process.exit(1);
+  }
+
+  if (!isLocal && password === LOCAL_DEV_DEFAULT_PASSWORD) {
+    console.error(
+      "Refusing to use the local dev default password on a hosted database. Choose a unique ADMIN_PASSWORD.",
+    );
+    process.exit(1);
+  }
 
   const passwordHash = await hashPassword(password);
 
@@ -26,8 +61,10 @@ async function main() {
   });
 
   console.log(`Admin user ready: ${user.email} (${user.role})`);
-  if (!process.env.ADMIN_PASSWORD) {
-    console.log("Default password: changeme123 — set ADMIN_PASSWORD in .env for production.");
+  if (isLocal && !process.env.ADMIN_PASSWORD) {
+    console.log(
+      `Local dev login: ${LOCAL_DEV_DEFAULT_EMAIL} / ${LOCAL_DEV_DEFAULT_PASSWORD} — change before any shared deploy.`,
+    );
   }
 }
 

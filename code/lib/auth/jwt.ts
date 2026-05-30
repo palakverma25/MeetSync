@@ -1,5 +1,9 @@
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
-import { AUTH_TOKEN_MAX_AGE_SEC, AUTH_COOKIE_NAME, getJwtSecret } from "@/lib/auth/config";
+import {
+  AUTH_TOKEN_MAX_AGE_SEC,
+  AUTH_COOKIE_NAME,
+  getJwtSecret,
+} from "@/lib/auth/config";
 
 export { AUTH_COOKIE_NAME };
 
@@ -40,6 +44,7 @@ export async function signAccessToken(claims: AccessTokenClaims): Promise<string
     role: claims.role,
   })
     .setProtectedHeader({ alg: "HS256" })
+    .setIssuer("meetsync")
     .setSubject(claims.sub)
     .setIssuedAt()
     .setExpirationTime(`${AUTH_TOKEN_MAX_AGE_SEC}s`)
@@ -50,6 +55,7 @@ export async function verifyAccessToken(token: string): Promise<SessionUser | nu
   try {
     const { payload } = await jwtVerify(token, getJwtSecret(), {
       algorithms: ["HS256"],
+      issuer: "meetsync",
     });
     return claimsFromPayload(payload);
   } catch {

@@ -86,22 +86,27 @@ if (cfg.EMAIL_FROM) {
   }
 }
 
-const authVars = [
-  ["JWT_SECRET", true],
-  ["ADMIN_EMAIL", false],
-  ["ADMIN_PASSWORD", true],
-  ["ADMIN_NAME", false],
-];
-
-for (const [name, sensitive] of authVars) {
-  const value = cfg[name]?.trim();
-  if (!value) continue;
-  for (const t of targets) {
-    vercelRm(name, t);
-    vercelAdd(name, t, value, sensitive);
+const jwtSecret = cfg.JWT_SECRET?.trim();
+if (jwtSecret) {
+  if (
+    jwtSecret.includes("dev-only-insecure") ||
+    jwtSecret.includes("your-random-secret") ||
+    jwtSecret.includes("replace-with-32") ||
+    jwtSecret === "changeme123"
+  ) {
+    console.warn(
+      "WARNING: JWT_SECRET in .env looks weak. Use: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
+    );
   }
+  for (const t of targets) {
+    vercelRm("JWT_SECRET", t);
+    vercelAdd("JWT_SECRET", t, jwtSecret, true);
+  }
+} else {
+  console.warn("JWT_SECRET missing in .env — set it before production deploy.");
 }
 
 console.log(
-  "Synced APP_BASE_URL, auth vars (+ Resend if present) to Vercel for production & preview.",
+  "Synced APP_BASE_URL, JWT_SECRET (+ Resend vars if present) to Vercel for production & preview.",
 );
+console.log("Admin user: run npm run db:seed:admin locally with production DATABASE_URL (do not store ADMIN_PASSWORD on Vercel).");

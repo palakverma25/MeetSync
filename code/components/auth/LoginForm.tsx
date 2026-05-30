@@ -22,6 +22,7 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({ email, password }),
       });
       const data = (await res.json()) as { error?: string; ok?: boolean };

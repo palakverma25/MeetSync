@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { MeetSyncWordmark } from "@/components/MeetSyncWordmark";
+import { safeInternalPath } from "@/lib/auth/safeRedirect";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -13,8 +14,7 @@ type PageProps = {
 
 export default async function LoginPage({ searchParams }: PageProps) {
   const { next } = await searchParams;
-  const nextPath =
-    next && next.startsWith("/") && !next.startsWith("//") ? next : "/events";
+  const nextPath = safeInternalPath(next);
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center bg-stone-100 px-4 py-10 dark:bg-stone-950">

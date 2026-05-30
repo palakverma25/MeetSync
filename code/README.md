@@ -9,7 +9,7 @@ cp .env.example .env
 npm install
 npm run db:up          # local Postgres (Prisma dev — no Docker required)
 npm run db:migrate
-npm run db:seed:admin  # create admin@meetsync.local (see ADMIN_* in .env)
+npm run db:seed:admin  # creates admin from ADMIN_* in .env (see .env.example)
 npm run dev
 ```
 
@@ -19,7 +19,7 @@ After `db:up`, copy the `postgres://…` URL from the terminal into `.env` as `D
 
 Open [http://localhost:3000/events](http://localhost:3000/events) — you’ll be redirected to sign in.
 
-Default admin (after `db:seed:admin`): `admin@meetsync.local` / `changeme123` unless you set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env`.
+After `db:seed:admin`, sign in with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` from your `.env`. For local dev only, if you omit `ADMIN_PASSWORD`, the script uses a documented dev default — **never use that on Vercel/production**.
 
 Optional sample data: `npm run db:seed` (wipes events and attendees).
 
