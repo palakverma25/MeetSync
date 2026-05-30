@@ -32,15 +32,27 @@ export function AddAttendeeForm({ eventId }: { eventId: string }) {
         </label>
         <label className={labelClass}>
           Phone
-          <input name="phone" required type="tel" autoComplete="tel" className={field} />
+          <input
+            name="phone"
+            required
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="e.g. +1 555 123 4567"
+            pattern="^\+?[\d\s().-]{10,20}$"
+            title="10–15 digits; optional + country code"
+            className={field}
+          />
         </label>
         <label className={labelClass}>
           Email <span className="font-normal text-stone-500">(optional)</span>
           <input
             name="email"
             type="email"
+            inputMode="email"
             autoComplete="email"
-            placeholder="For RSVP link & email invite"
+            maxLength={254}
+            placeholder="name@example.com"
             className={field}
           />
         </label>

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { looksLikeEmail } from "@/lib/rsvp";
+import { parseOptionalEmail, validatePhone } from "@/lib/rsvp";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -21,9 +21,8 @@ export async function POST(req: Request, { params }: Params) {
 
   const b = body as Record<string, unknown>;
   const name = typeof b.name === "string" ? b.name.trim() : "";
-  const phone = typeof b.phone === "string" ? b.phone.trim() : "";
-  const emailRaw = typeof b.email === "string" ? b.email.trim() : "";
-  const email = emailRaw ? emailRaw : null;
+  const phoneRaw = typeof b.phone === "string" ? b.phone : "";
+  const emailRaw = typeof b.email === "string" ? b.email : "";
   const dietaryPreference =
     typeof b.dietaryPreference === "string" ? b.dietaryPreference.trim() : "";
   const hasPlusOne = Boolean(b.hasPlusOne);
@@ -32,22 +31,26 @@ export async function POST(req: Request, { params }: Params) {
       ? b.rsvpStatus
       : "confirmed";
 
-  if (email && !looksLikeEmail(email)) {
-    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  if (!name) {
+    return NextResponse.json({ error: "name is required" }, { status: 400 });
   }
 
-  if (!name || !phone) {
-    return NextResponse.json(
-      { error: "name and phone are required" },
-      { status: 400 },
-    );
+  const phoneResult = validatePhone(phoneRaw);
+  if (!phoneResult.ok) {
+    return NextResponse.json({ error: phoneResult.error }, { status: 400 });
   }
+
+  const emailResult = parseOptionalEmail(emailRaw);
+  if (!emailResult.ok) {
+    return NextResponse.json({ error: emailResult.error }, { status: 400 });
+  }
+  const email = emailResult.email;
 
   const attendee = await prisma.attendee.create({
     data: {
       eventId,
       name,
-      phone,
+      phone: phoneResult.value,
       email,
       dietaryPreference,
       hasPlusOne,

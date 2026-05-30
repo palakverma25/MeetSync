@@ -5,11 +5,16 @@ Next.js dashboard for events, rosters, check-in, and `/rsvp/[token]` guest respo
 ## Setup
 
 ```bash
-cp .env.example .env   # set DATABASE_URL to PostgreSQL (not SQLite)
+cp .env.example .env
 npm install
+npm run db:up          # local Postgres (Prisma dev — no Docker required)
 npm run db:migrate
 npm run dev
 ```
+
+After `db:up`, copy the `postgres://…` URL from the terminal into `.env` as `DATABASE_URL` if the port differs from `.env.example`.
+
+`.env` must use a `postgresql://` or `postgres://` URL — not `file:./…` (SQLite). For hosted DBs (Neon, Vercel Postgres), replace `DATABASE_URL` with your connection string. Optional Docker Postgres: `npm run db:up:docker` and use the URL in `docker-compose.yml`.
 
 Open [http://localhost:3000/events](http://localhost:3000/events).
 

@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: meetsync
+      POSTGRES_PASSWORD: meetsync
+      POSTGRES_DB: meetsync
+    volumes:
+      - meetsync_pgdata:/var/lib/postgresql/data
+
+volumes:
+  meetsync_pgdata:

@@ -1,4 +1,5 @@
 import { getPublicBaseUrl } from "@/lib/publicUrl";
+import { validateEmail } from "@/lib/rsvp";
 
 export type SendRsvpInviteResult =
   | { ok: true; skipped?: false }
@@ -49,10 +50,11 @@ export async function sendRsvpInviteEmail(args: Args): Promise<SendRsvpInviteRes
   const eventTitle = oneLine(args.eventTitle, 300);
   const eventVenue = oneLine(args.eventVenue, 500);
   const eventDateLabel = oneLine(args.eventDateLabel, 200);
-  const toEmail = oneLine(args.to, 254);
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(toEmail)) {
-    return { ok: false, error: "Invalid recipient email address." };
+  const emailResult = validateEmail(args.to);
+  if (!emailResult.ok) {
+    return { ok: false, error: emailResult.error };
   }
+  const toEmail = emailResult.value;
 
   const html = `
 <!DOCTYPE html>

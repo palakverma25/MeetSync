@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatEventDateTime } from "@/lib/formatDate";
 import { sendRsvpInviteEmail } from "@/lib/sendRsvpInvite";
-import { clampDietaryPreference, looksLikeEmail } from "@/lib/rsvp";
+import { clampDietaryPreference, parseOptionalEmail, validatePhone } from "@/lib/rsvp";
 
 export type FormState = { ok: boolean; error: string | null; info?: string | null };
 
@@ -48,9 +48,8 @@ export async function addAttendee(
   }
 
   const name = String(formData.get("name") ?? "").trim();
-  const phone = String(formData.get("phone") ?? "").trim();
-  const emailRaw = String(formData.get("email") ?? "").trim();
-  const email = emailRaw ? emailRaw : null;
+  const phoneRaw = String(formData.get("phone") ?? "");
+  const emailRaw = String(formData.get("email") ?? "");
   const dietaryPreference = clampDietaryPreference(
     String(formData.get("dietaryPreference") ?? ""),
   );
@@ -58,13 +57,20 @@ export async function addAttendee(
   const rsvpStatus = String(formData.get("rsvpStatus") ?? "confirmed");
   const sendInvite = formData.get("sendInvite") === "on";
 
-  if (!name || !phone) {
-    return { ok: false, error: "Name and phone are required." };
+  if (!name) {
+    return { ok: false, error: "Name is required." };
   }
 
-  if (email && !looksLikeEmail(email)) {
-    return { ok: false, error: "Please enter a valid email address, or leave it blank." };
+  const phoneResult = validatePhone(phoneRaw);
+  if (!phoneResult.ok) {
+    return { ok: false, error: phoneResult.error };
   }
+
+  const emailResult = parseOptionalEmail(emailRaw);
+  if (!emailResult.ok) {
+    return { ok: false, error: emailResult.error };
+  }
+  const email = emailResult.email;
 
   if (sendInvite && !email) {
     return { ok: false, error: "Add an email address to send the RSVP invite." };
@@ -91,7 +97,7 @@ export async function addAttendee(
     data: {
       eventId,
       name,
-      phone,
+      phone: phoneResult.value,
       email,
       dietaryPreference,
       hasPlusOne,
